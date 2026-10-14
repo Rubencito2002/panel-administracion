@@ -12,18 +12,27 @@ export default function ProjectForm({
   onSubmit,
   initialData,
 }: ProjectFormProps) {
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [technologies, setTechnologies] = useState("");
+  const [type, setType] = useState("Frontend");
   const [github, setGithub] = useState("");
   const [demo, setDemo] = useState("");
-  const [featured, setFeatured] = useState(false);
+  const [year, setYear] = useState("");
+  const [featured, setFeatured] =
+    useState(false);
 
   useEffect(() => {
     if (initialData) {
-      setTitle(initialData.title);
+      setName(initialData.name);
       setDescription(initialData.description);
+      setTechnologies(
+        initialData.technologies.join(", ")
+      );
+      setType(initialData.type);
       setGithub(initialData.github);
-      setDemo(initialData.demo);
+      setDemo(initialData.demo || "");
+      setYear(initialData.year);
       setFeatured(initialData.featured);
     }
   }, [initialData]);
@@ -34,19 +43,30 @@ export default function ProjectForm({
     e.preventDefault();
 
     await onSubmit({
-      id: initialData?.id,
-      title,
+      ...(initialData?.id && {
+        id: initialData.id,
+      }),
+      name,
       description,
+      technologies: technologies
+        .split(",")
+        .map((tech) => tech.trim())
+        .filter(Boolean),
+      type,
       github,
       demo,
+      year,
       featured,
-    });
+    } as Project);
 
     if (!initialData) {
-      setTitle("");
+      setName("");
       setDescription("");
+      setTechnologies("");
+      setType("Frontend");
       setGithub("");
       setDemo("");
+      setYear("");
       setFeatured(false);
     }
   };
@@ -59,20 +79,36 @@ export default function ProjectForm({
           : "Nuevo Proyecto"}
       </h2>
 
-      <input className="w-full rounded border p-2" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)}/>
+      <input className="w-full rounded border p-2" placeholder="Nombre del proyecto" value={name} onChange={(e) => setName(e.target.value)}/>
+
       <textarea className="w-full rounded border p-2" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)}/>
+
+      <input className="w-full rounded border p-2" placeholder="Tecnologías (React, TypeScript, Firebase)" value={technologies} onChange={(e) => setTechnologies(e.target.value)}/>
+
+      <select className="w-full rounded border p-2" value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="Frontend">
+          Frontend
+        </option>
+
+        <option value="Backend">
+          Backend
+        </option>
+
+        <option value="FullStack">
+          FullStack
+        </option>
+      </select>
+
       <input className="w-full rounded border p-2" placeholder="GitHub" value={github} onChange={(e) => setGithub(e.target.value)}/>
       <input className="w-full rounded border p-2" placeholder="Demo" value={demo} onChange={(e) => setDemo(e.target.value)}/>
+      <input className="w-full rounded border p-2" placeholder="Año" value={year} onChange={(e) => setYear(e.target.value)}/>
 
       <label className="flex items-center gap-2">
-        <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)}/>
+        <input type="checkbox" checked={featured} onChange={(e) => setFeatured( e.target.checked )}/>
         <span>Destacado</span>
       </label>
 
-      <button
-        type="submit"
-        className="rounded bg-green-600 px-4 py-2 text-white"
-      >
+      <button type="submit" className="rounded bg-green-600 px-4 py-2 text-white">
         {initialData
           ? "Actualizar Proyecto"
           : "Guardar Proyecto"}

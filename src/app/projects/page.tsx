@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProjectForm from "@/components/projects/ProjectForm";
 import { getProjects, createProject, updateProject, deleteProject, } from "@/services/projectService";
-
 import { Project } from "@/types/project";
 
 export default function ProjectsPage() {
@@ -31,60 +30,62 @@ export default function ProjectsPage() {
   }, []);
 
   const handleCreateProject = async (
-    project: Project) => {
-      try {
-        if (
-          editingProject &&
-          editingProject.id
-        ) {
-          await updateProject(
-            editingProject.id,
-            project
-          );
-
-          setEditingProject(null);
-        } else {
-          await createProject(project);
-        }
-
-        const updatedProjects = await getProjects();
-
-        setProjects(updatedProjects);
-      } catch (error) {
-        console.error(
-          "Error al guardar proyecto:",
-          error
+    project: Project
+  ) => {
+    try {
+      if (
+        editingProject &&
+        editingProject.id
+      ) {
+        await updateProject(
+          editingProject.id,
+          project
         );
+
+        setEditingProject(null);
+      } else {
+        await createProject(project);
+      }
+
+      const updatedProjects = await getProjects();
+
+      setProjects(updatedProjects);
+    } catch (error) {
+      console.error(
+        "Error al guardar proyecto:",
+        error
+      );
     }
   };
 
   const handleDeleteProject = async (
-    id: string ) => {
-      const confirmed = window.confirm(
-        "¿Seguro que deseas eliminar este proyecto?"
-      );
+    id: string
+  ) => {
+    const confirmed = window.confirm(
+      "¿Seguro que deseas eliminar este proyecto?"
+    );
 
-      if (!confirmed) return;
+    if (!confirmed) return;
 
-      try {
-        await deleteProject(id);
+    try {
+      await deleteProject(id);
 
-        const updatedProjects = await getProjects();
+      const updatedProjects = await getProjects();
 
-        setProjects(updatedProjects);
+      setProjects(updatedProjects);
 
-        if (
-          editingProject?.id === id
-        ) {
-          setEditingProject(null);
-        }
-      } catch (error) {
-        console.error(
-          "Error al eliminar proyecto:",
-        error
-        );
+      if (
+        editingProject?.id === id
+      ) {
+        setEditingProject(null);
       }
-    };
+    } catch (error) {
+      console.error(
+        "Error al eliminar proyecto:",
+        error
+      );
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -95,9 +96,8 @@ export default function ProjectsPage() {
 
         {editingProject && (
           <div className="mb-4 rounded border border-blue-500 p-4">
-            Editando:
-            {" "}
-            {editingProject.title}
+            Editando:{" "}
+            {editingProject.name}
           </div>
         )}
 
@@ -113,38 +113,64 @@ export default function ProjectsPage() {
         ) : (
           <div className="space-y-4">
             {projects.map((project) => (
-              <div key={project.id} className="rounded-lg border p-4 shadow-sm">
-                <h2 className="text-xl font-bold">
-                  {project.title}
-                </h2>
+              <div key={project.id} className="rounded-lg border p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold">
+                    {project.name}
+                  </h2>
+
+                  {project.featured && (
+                    <span className="rounded bg-yellow-500 px-2 py-1 text-sm text-black">
+                      Destacado
+                    </span>
+                  )}
+                </div>
 
                 <p className="mt-2 text-gray-600">
                   {project.description}
                 </p>
 
-                <div className="mt-4 flex gap-4">
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {project.technologies?.map(
+                    (tech) => (
+                      <span key={tech} className="rounded-full bg-cyan-500/20 border border-cyan-500/40 px-3 py-1 text-sm text-cyan-300">
+                        {tech}
+                      </span>
+                    )
+                  )}
+                </div>
+
+                <div className="mt-4 space-y-1 text-sm">
+                  <p>
+                    <strong>Tipo:</strong>{" "}
+                    {project.type}
+                  </p>
+
+                  <p>
+                    <strong>Año:</strong>{" "}
+                    {project.year}
+                  </p>
+                </div>
+                
+                <div className="mt-4 flex flex-wrap gap-4">
                   <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                     GitHub
                   </a>
 
-                  <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
-                    Demo
-                  </a>
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
+                      Demo
+                    </a>
+                  )}
 
-                  <button onClick={() => setEditingProject(project)} className="rounded bg-blue-600 px-3 py-1 text-white">
+                  <button onClick={() => setEditingProject(project)} className="rounded bg-red-600 px-3 py-1 text-white">
                     Editar
                   </button>
 
-                  <button onClick={() => project.id && handleDeleteProject(project.id) } className="rounded bg-red-600 px-3 py-1 text-white">
+                  <button onClick={() => project.id && handleDeleteProject(project.id)} className="rounded bg-red-600 px-3 py-1 text-white">
                     Eliminar
                   </button>
                 </div>
-
-                {project.featured && (
-                  <span className="mt-4 inline-block rounded bg-yellow-500 px-2 py-1 text-sm text-black">
-                    Destacado
-                  </span>
-                )}
               </div>
             ))}
           </div>
