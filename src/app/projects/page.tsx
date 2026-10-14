@@ -2,27 +2,46 @@
 
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { getProjects } from "@/services/projectService";
+import ProjectForm from "@/components/projects/ProjectForm";
+import { getProjects, createProject, } from "@/services/projectService";
+
 import { Project } from "@/types/project";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const data = await getProjects();
-        setProjects(data);
-      } catch (error) {
-        console.error("Error al cargar proyectos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadProjects = async () => {
+    try {
+      const data = await getProjects();
+      setProjects(data);
+    } catch (error) {
+      console.error(
+        "Error al cargar proyectos:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadProjects();
   }, []);
+
+  const handleCreateProject = async ( project: Project ) => {
+    try {
+      await createProject(project);
+
+      const updatedProjects = await getProjects();
+      setProjects(updatedProjects);
+    } catch (error) {
+      console.error(
+        "Error al crear proyecto:",
+        error
+      );
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -30,6 +49,10 @@ export default function ProjectsPage() {
         <h1 className="mb-6 text-3xl font-bold">
           Proyectos
         </h1>
+
+        <ProjectForm
+          onSubmit={handleCreateProject}
+        />
 
         {loading ? (
           <p>Cargando proyectos...</p>

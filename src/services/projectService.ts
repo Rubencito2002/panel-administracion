@@ -1,5 +1,4 @@
 import { addDoc, collection, getDocs, } from "firebase/firestore";
-
 import { db } from "@/lib/firebase";
 import { Project } from "@/types/project";
 
