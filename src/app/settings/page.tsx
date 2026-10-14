@@ -1,6 +1,8 @@
+import DashboardLayout from "@/components/layout/DashboardLayout";
+
 export default function SettingsPage() {
   return (
-    <main className="p-6">
+    <DashboardLayout>
       <h1 className="text-3xl font-bold">
         Ajustes
       </h1>
@@ -10,6 +12,6 @@ export default function SettingsPage() {
           Cambiar contraseña
         </button>
       </div>
-    </main>
+    </DashboardLayout>
   );
 }
