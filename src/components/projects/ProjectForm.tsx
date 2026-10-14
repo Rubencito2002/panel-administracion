@@ -19,7 +19,15 @@ export default function ProjectForm({
   const [github, setGithub] = useState("");
   const [demo, setDemo] = useState("");
   const [year, setYear] = useState("");
-  const [featured, setFeatured] =
+  const [featured, setFeatured] = useState(false);
+
+  const [imageFile, setImageFile] =
+    useState<File | null>(null);
+
+  const [imageUrl, setImageUrl] =
+    useState("");
+
+  const [uploading, setUploading] =
     useState(false);
 
   useEffect(() => {
@@ -34,13 +42,56 @@ export default function ProjectForm({
       setDemo(initialData.demo || "");
       setYear(initialData.year);
       setFeatured(initialData.featured);
+      setImageUrl(
+        initialData.imageUrl || ""
+      );
     }
   }, [initialData]);
+
+  const uploadImage = async () => {
+    if (!imageFile) return imageUrl;
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append(
+        "file",
+        imageFile
+      );
+
+      const response = await fetch(
+        "/api/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data =
+        await response.json();
+
+      return data.url;
+    } catch (error) {
+      console.error(
+        "Error subiendo imagen",
+        error
+      );
+
+      return "";
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (
     e: React.FormEvent
   ) => {
     e.preventDefault();
+
+    const uploadedImageUrl =
+      await uploadImage();
 
     await onSubmit({
       ...(initialData?.id && {
@@ -57,6 +108,8 @@ export default function ProjectForm({
       demo,
       year,
       featured,
+      imageUrl:
+        uploadedImageUrl || imageUrl,
     } as Project);
 
     if (!initialData) {
@@ -68,6 +121,8 @@ export default function ProjectForm({
       setDemo("");
       setYear("");
       setFeatured(false);
+      setImageFile(null);
+      setImageUrl("");
     }
   };
 
@@ -103,13 +158,27 @@ export default function ProjectForm({
       <input className="w-full rounded border p-2" placeholder="Demo" value={demo} onChange={(e) => setDemo(e.target.value)}/>
       <input className="w-full rounded border p-2" placeholder="Año" value={year} onChange={(e) => setYear(e.target.value)}/>
 
+      <div>
+        <label className="mb-2 block">
+          Imagen del proyecto
+        </label>
+
+        <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)}/>
+      </div>
+
+      {imageUrl && (
+        <img src={imageUrl} alt={name} className="h-40 rounded border object-cover"/>
+      )}
+
       <label className="flex items-center gap-2">
-        <input type="checkbox" checked={featured} onChange={(e) => setFeatured( e.target.checked )}/>
+        <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)}/>
         <span>Destacado</span>
       </label>
 
-      <button type="submit" className="rounded bg-green-600 px-4 py-2 text-white">
-        {initialData
+      <button type="submit" disabled={uploading} className="rounded bg-green-600 px-4 py-2 text-white disabled:opacity-50">
+        {uploading
+          ? "Subiendo imagen..."
+          : initialData
           ? "Actualizar Proyecto"
           : "Guardar Proyecto"}
       </button>
