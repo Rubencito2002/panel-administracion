@@ -114,6 +114,15 @@ export default function ProjectsPage() {
           <div className="space-y-4">
             {projects.map((project) => (
               <div key={project.id} className="rounded-lg border p-6 shadow-sm">
+
+                {project.imageUrl && (
+                  <img
+                    src={project.imageUrl}
+                    alt={project.name}
+                    className="mb-4 h-48 w-full rounded-lg object-cover"
+                  />
+                )}
+                
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold">
                     {project.name}
