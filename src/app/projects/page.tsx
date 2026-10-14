@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProjectForm from "@/components/projects/ProjectForm";
-import { getProjects, createProject, } from "@/services/projectService";
+import { getProjects, createProject, updateProject, } from "@/services/projectService";
 
 import { Project } from "@/types/project";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   const loadProjects = async () => {
     try {
@@ -29,17 +30,31 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
-  const handleCreateProject = async ( project: Project ) => {
-    try {
-      await createProject(project);
+  const handleCreateProject = async (
+    project: Project) => {
+      try {
+        if (
+          editingProject &&
+          editingProject.id
+        ) {
+          await updateProject(
+            editingProject.id,
+            project
+          );
 
-      const updatedProjects = await getProjects();
-      setProjects(updatedProjects);
-    } catch (error) {
-      console.error(
-        "Error al crear proyecto:",
-        error
-      );
+          setEditingProject(null);
+        } else {
+          await createProject(project);
+        }
+
+        const updatedProjects = await getProjects();
+
+        setProjects(updatedProjects);
+      } catch (error) {
+        console.error(
+          "Error al guardar proyecto:",
+          error
+        );
     }
   };
 
@@ -50,8 +65,17 @@ export default function ProjectsPage() {
           Proyectos
         </h1>
 
+        {editingProject && (
+          <div className="mb-4 rounded border border-blue-500 p-4">
+            Editando:
+            {" "}
+            {editingProject.title}
+          </div>
+        )}
+
         <ProjectForm
           onSubmit={handleCreateProject}
+          initialData={editingProject}
         />
 
         {loading ? (
@@ -78,6 +102,10 @@ export default function ProjectsPage() {
                   <a href={project.demo} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
                     Demo
                   </a>
+
+                  <button onClick={() => setEditingProject(project)} className="rounded bg-blue-600 px-3 py-1 text-white">
+                    Editar
+                  </button>
                 </div>
 
                 {project.featured && (
