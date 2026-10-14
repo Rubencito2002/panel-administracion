@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProjectForm from "@/components/projects/ProjectForm";
-import { getProjects, createProject, updateProject, } from "@/services/projectService";
+import { getProjects, createProject, updateProject, deleteProject, } from "@/services/projectService";
 
 import { Project } from "@/types/project";
 
@@ -58,6 +58,34 @@ export default function ProjectsPage() {
     }
   };
 
+  const handleDeleteProject = async (
+    id: string ) => {
+      const confirmed = window.confirm(
+        "¿Seguro que deseas eliminar este proyecto?"
+      );
+
+      if (!confirmed) return;
+
+      try {
+        await deleteProject(id);
+
+        const updatedProjects = await getProjects();
+
+        setProjects(updatedProjects);
+
+        if (
+          editingProject?.id === id
+        ) {
+          setEditingProject(null);
+        }
+      } catch (error) {
+        console.error(
+          "Error al eliminar proyecto:",
+        error
+        );
+      }
+    };
+
   return (
     <DashboardLayout>
       <div>
@@ -105,6 +133,10 @@ export default function ProjectsPage() {
 
                   <button onClick={() => setEditingProject(project)} className="rounded bg-blue-600 px-3 py-1 text-white">
                     Editar
+                  </button>
+
+                  <button onClick={() => project.id && handleDeleteProject(project.id) } className="rounded bg-red-600 px-3 py-1 text-white">
+                    Eliminar
                   </button>
                 </div>
 
