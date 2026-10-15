@@ -10,6 +10,7 @@ export default function CertificatesPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
   const [ editingCertificate, setEditingCertificate, ] = useState<Certificate | null>(null);
+  // const [fileInputKey, setFileInputKey] = useState(Date.now());
   
   const loadCertificates = async () => {
     try {

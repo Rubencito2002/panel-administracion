@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Certificate } from "@/types/certificate";
 
 interface CertificateFormProps {
@@ -17,22 +17,15 @@ export default function CertificateForm({
 }: CertificateFormProps) {
   const [name, setname] = useState("");
   const [year, setYear] = useState("");
-  const [institution, setInstitution] =
-    useState("");
-  const [category, setCategory] =
-    useState("");
-  const [description, setDescription] =
-    useState("");
+  const [institution, setInstitution] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
-
-  const [pdfFile, setPdfFile] =
-    useState<File | null>(null);
-
-  const [pdfUrl, setPdfUrl] =
-    useState("");
-
-  const [uploading, setUploading] =
-    useState(false);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  // const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const pdfInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -123,9 +116,12 @@ export default function CertificateForm({
       setCategory("");
       setDescription("");
       setLink("");
-
       setPdfFile(null);
       setPdfUrl("");
+      // setFileInputKey(Date.now());
+      if (pdfInputRef.current) {
+        pdfInputRef.current.value = "";
+      }
     }
   };
 
@@ -151,7 +147,7 @@ export default function CertificateForm({
           PDF certificado
         </label>
 
-        <input type="file" accept=".pdf" onChange={(e) => setPdfFile(e.target.files?.[0] || null)}/>
+        <input ref={pdfInputRef} type="file" accept=".pdf" onChange={(e) => setPdfFile(e.target.files?.[0] || null)}/>
       </div>
 
       {pdfUrl && (
