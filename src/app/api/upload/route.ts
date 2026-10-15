@@ -21,12 +21,21 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    const isPdf =
+      file.type === "application/pdf";
+
     const result = await new Promise<any>(
       (resolve, reject) => {
         cloudinary.uploader
           .upload_stream(
             {
-              folder: "portfolio-projects",
+              folder: isPdf
+                ? "portfolio-certificates"
+                : "portfolio-projects",
+
+              resource_type: isPdf
+                ? "raw"
+                : "image",
             },
             (error, result) => {
               if (error) {
@@ -49,7 +58,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        error: "Error al subir imagen",
+        error:
+          "Error al subir archivo",
       },
       {
         status: 500,
