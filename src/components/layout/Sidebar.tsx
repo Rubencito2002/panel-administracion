@@ -20,24 +20,14 @@ export default function Sidebar() {
 
       <nav className="flex flex-col gap-2">
         <Link href="/dashboard">Dashboard</Link>
-
         <Link href="/projects">Proyectos</Link>
-
         <Link href="/certificates">Certificados</Link>
-
         <Link href="/journey">Recorrido Educativo & Profesional</Link>
-
-        <Link href="/recommendations">
-          Recomendaciones
-        </Link>
-
+        <Link href="/resource"> Recomendaciones </Link>
         <Link href="/settings">Ajustes</Link>
       </nav>
 
-      <button
-        onClick={handleLogout}
-        className="mt-auto rounded bg-red-600 p-2"
-      >
+      <button onClick={handleLogout} className="mt-auto rounded bg-red-600 p-2">
         Cerrar sesión
       </button>
     </aside>
