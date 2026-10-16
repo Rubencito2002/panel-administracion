@@ -25,7 +25,7 @@ export default function Sidebar() {
 
         <Link href="/certificates">Certificados</Link>
 
-        <Link href="/experience">Experiencia</Link>
+        <Link href="/journey">Recorrido Educativo & Profesional</Link>
 
         <Link href="/recommendations">
           Recomendaciones
