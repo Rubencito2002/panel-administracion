@@ -1,11 +1,98 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { getProjects } from "@/services/projectService";
+import { getCertificates } from "@/services/certificateService";
+import { getJourney } from "@/services/journeyService";
+import { getResources } from "@/services/resourceService";
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState({
+    projects: 0,
+    certificates: 0,
+    journey: 0,
+    resources: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {const loadStats = async () => {
+      try {
+        const [projects, certificates, journey, resources, ] = await Promise.all([getProjects(), getCertificates(), getJourney(), getResources(),]);
+
+        setStats({
+          projects: projects.length,
+          certificates: certificates.length,
+          journey: journey.length,
+          resources: resources.length,
+        });
+      } catch (error) {
+        console.error(
+          "Error cargando estadísticas:",
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
+
   return (
     <DashboardLayout>
-      <h1 className="text-3xl font-bold">
-        Dashboard
-      </h1>
+      <div>
+        <h1 className="mb-8 text-3xl font-bold">
+          Dashboard
+        </h1>
+
+        {loading ? (
+          <p>Cargando estadísticas...</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-lg border p-6 shadow-sm">
+              <h2 className="text-lg font-semibold">
+                Proyectos
+              </h2>
+
+              <p className="mt-3 text-4xl font-bold text-cyan-500">
+                {stats.projects}
+              </p>
+            </div>
+
+            <div className="rounded-lg border p-6 shadow-sm">
+              <h2 className="text-lg font-semibold">
+                Certificados
+              </h2>
+
+              <p className="mt-3 text-4xl font-bold text-green-500">
+                {stats.certificates}
+              </p>
+            </div>
+
+            <div className="rounded-lg border p-6 shadow-sm">
+              <h2 className="text-lg font-semibold">
+                Recorrido
+              </h2>
+
+              <p className="mt-3 text-4xl font-bold text-purple-500">
+                {stats.journey}
+              </p>
+            </div>
+
+            <div className="rounded-lg border p-6 shadow-sm">
+              <h2 className="text-lg font-semibold">
+                Recursos
+              </h2>
+
+              <p className="mt-3 text-4xl font-bold text-orange-500">
+                {stats.resources}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </DashboardLayout>
   );
 }
