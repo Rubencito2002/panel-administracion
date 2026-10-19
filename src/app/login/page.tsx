@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/authService";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,23 +12,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       setError("");
 
       await login(email, password);
-
+      toast.success("Sesión iniciada correctamente");
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
-
-      setError(
-        "Correo o contraseña incorrectos"
-      );
+      toast.error("Error al iniciar sesión. Por favor, inténtalo de nuevo.");
+      setError("Correo o contraseña incorrectos");
     }
   };
 

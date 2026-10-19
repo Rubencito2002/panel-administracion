@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import JourneyForm from "@/components/journey/JourneyForm";
 import { getJourney, createJourney, updateJourney, deleteJourney, } from "@/services/journeyService";
 import { Journey } from "@/types/journey";
+import toast from "react-hot-toast";
 
 export default function JourneyPage() {
   const [journeys, setJourneys] = useState<Journey[]>([]);
@@ -17,6 +18,7 @@ export default function JourneyPage() {
       setJourneys(data);
     } catch (error) {
       console.error(error);
+      toast.error("Error al cargar los elementos del recorrido");
     } finally {
       setLoading(false);
     }
@@ -33,9 +35,11 @@ export default function JourneyPage() {
           editingJourney && editingJourney.id
         ) {
           await updateJourney(editingJourney.id,journey);
+          toast.success("Recorrido actualizado correctamente");
           setEditingJourney(null);
         } else {
           await createJourney(journey);
+          toast.success("Recorrido creado correctamente");
         }
 
         const updated = await getJourney();
@@ -43,6 +47,7 @@ export default function JourneyPage() {
         setJourneys(updated);
       } catch (error) {
         console.error(error);
+        toast.error("Error al guardar el recorrido. Por favor, inténtalo de nuevo.");
       }
     };
 

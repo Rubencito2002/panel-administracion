@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import ResourceForm from "@/components/resource/ResourceForm";
 import { getResources, createResource, updateResource, deleteResource, } from "@/services/resourceService";
 import { Resource } from "@/types/resource";
+import toast from "react-hot-toast";
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -17,6 +18,7 @@ export default function ResourcesPage() {
       setResources(data);
     } catch (error) {
       console.error(error);
+      toast.error("Error al cargar los recursos. Por favor, inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -32,16 +34,12 @@ export default function ResourcesPage() {
           editingResource &&
           editingResource.id
         ) {
-          await updateResource(
-            editingResource.id,
-            resource
-          );
-
+          await updateResource(editingResource.id,resource);
+          toast.success("Recurso actualizado correctamente");
           setEditingResource(null);
         } else {
-          await createResource(
-            resource
-          );
+          await createResource(resource);
+          toast.success("Recurso creado correctamente");
         }
 
         const updated = await getResources();
@@ -49,6 +47,7 @@ export default function ResourcesPage() {
         setResources(updated);
       } catch (error) {
         console.error(error);
+        toast.error("Error al guardar el recurso. Por favor, inténtalo de nuevo.");
       }
     };
 

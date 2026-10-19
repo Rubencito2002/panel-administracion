@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import CertificateForm from "@/components/certificates/CertificateForm";
 import { getCertificates, createCertificate, updateCertificate, deleteCertificate, } from "@/services/certificateService";
 import { Certificate } from "@/types/certificate";
+import toast from "react-hot-toast";
 
 export default function CertificatesPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -18,10 +19,8 @@ export default function CertificatesPage() {
 
       setCertificates(data);
     } catch (error) {
-      console.error(
-        "Error al cargar certificados:",
-        error
-      );
+      console.error("Error al cargar certificados:", error);
+      toast.error("Error al cargar el certificados. Por favor, inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -39,16 +38,13 @@ export default function CertificatesPage() {
         editingCertificate &&
         editingCertificate.id
       ) {
-        await updateCertificate(
-          editingCertificate.id,
-          certificate
-        );
-
+        await updateCertificate(editingCertificate.id, certificate);
+        toast.success("Certificado actualizado correctamente");
+        
         setEditingCertificate(null);
       } else {
-        await createCertificate(
-          certificate
-        );
+        await createCertificate(certificate);
+        toast.success("Certificado guardado correctamente");
       }
 
       const updatedCertificates = await getCertificates();
@@ -57,10 +53,8 @@ export default function CertificatesPage() {
         updatedCertificates
       );
     } catch (error) {
-      console.error(
-        "Error al guardar certificado:",
-        error
-      );
+      console.error("Error al guardar certificado:", error);
+      toast.error("Error al guardar certificado. Por favor, inténtalo de nuevo.");
     }
   };
 
@@ -75,9 +69,9 @@ export default function CertificatesPage() {
 
       try {
         await deleteCertificate(id);
+        toast.success("Certificado eliminado correctamente");
 
-        const updatedCertificates =
-          await getCertificates();
+        const updatedCertificates = await getCertificates();
 
         setCertificates(
           updatedCertificates
@@ -91,10 +85,8 @@ export default function CertificatesPage() {
           );
         }
       } catch (error) {
-        console.error(
-          "Error al eliminar certificado:",
-          error
-        );
+        console.error("Error al eliminar certificado:", error);
+        toast.error("Error al eliminar el certificado. Por favor, inténtalo de nuevo.");
       }
     };
 

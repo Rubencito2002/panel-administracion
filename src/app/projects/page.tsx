@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProjectForm from "@/components/projects/ProjectForm";
 import { getProjects, createProject, updateProject, deleteProject, } from "@/services/projectService";
 import { Project } from "@/types/project";
+import toast from "react-hot-toast";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -16,10 +17,8 @@ export default function ProjectsPage() {
       const data = await getProjects();
       setProjects(data);
     } catch (error) {
-      console.error(
-        "Error al cargar proyectos:",
-        error
-      );
+      console.error("Error al cargar proyectos:", error);
+      toast.error("Error al cargar los proyectos. Por favor, inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -37,38 +36,34 @@ export default function ProjectsPage() {
         editingProject &&
         editingProject.id
       ) {
-        await updateProject(
-          editingProject.id,
-          project
-        );
-
+        await updateProject(editingProject.id,project);
+        toast.success("Proyecto actualizado correctamente")
         setEditingProject(null);
       } else {
         await createProject(project);
+        toast.success("Proyecto creado correctamente");
       }
 
       const updatedProjects = await getProjects();
 
       setProjects(updatedProjects);
     } catch (error) {
-      console.error(
-        "Error al guardar proyecto:",
-        error
-      );
+      console.error("Error al guardar proyecto:", error);
+      toast.error("Error al guardar proyecto. Por favor, inténtalo de nuevo.");
     }
   };
 
   const handleDeleteProject = async (
     id: string
   ) => {
-    const confirmed = window.confirm(
-      "¿Seguro que deseas eliminar este proyecto?"
-    );
+    const confirmed = window.confirm("¿Seguro que deseas eliminar este proyecto?");
 
     if (!confirmed) return;
 
     try {
       await deleteProject(id);
+
+      toast.success("Proyecto eliminado correctamente");
 
       const updatedProjects = await getProjects();
 
@@ -80,10 +75,8 @@ export default function ProjectsPage() {
         setEditingProject(null);
       }
     } catch (error) {
-      console.error(
-        "Error al eliminar proyecto:",
-        error
-      );
+      console.error("Error al eliminar proyecto:", error);
+      toast.error("Error al guardar proyecto. Por favor, inténtalo de nuevo.");
     }
   };
 
