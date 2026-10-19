@@ -100,6 +100,10 @@ export default function JourneyPage() {
                   {journey.description}
                 </p>
 
+                <p className="mt-3">
+                  Orden: {journey.order}
+                </p>
+
                 <div className="mt-4 flex gap-3">
                   <button onClick={() => setEditingJourney( journey)} className="rounded bg-blue-600 px-3 py-1 text-white">
                     Editar
