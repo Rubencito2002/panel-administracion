@@ -4,4 +4,5 @@ export interface Journey {
   title: string;
   type: string;
   description: string;
+  order: number;
 }

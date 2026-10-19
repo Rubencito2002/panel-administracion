@@ -19,6 +19,7 @@ export default function JourneyForm({
   const [title, settitle] = useState("");
   const [type, setType] = useState("Educación");
   const [description, setDescription] = useState("");
+  const [order, setOrder] = useState(1);
 
   useEffect(() => {
     if (initialData) {
@@ -26,6 +27,7 @@ export default function JourneyForm({
       settitle(initialData.title);
       setType(initialData.type);
       setDescription(initialData.description);
+      setOrder(initialData.order);
     }
   }, [initialData]);
 
@@ -43,6 +45,7 @@ export default function JourneyForm({
       title,
       type,
       description,
+      order,
     });
 
     if (!initialData) {
@@ -50,43 +53,45 @@ export default function JourneyForm({
       settitle("");
       setType("Educación");
       setDescription("");
+      setOrder(1);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 space-y-4 rounded border p-4">
-      <h2 className="text-xl font-bold">
-        {initialData
-          ? "Editar Recorrido"
-          : "Nuevo Recorrido"}
-      </h2>
+      <form onSubmit={handleSubmit} className="mb-6 space-y-4 rounded border p-4">
+        <h2 className="text-xl font-bold">
+          {initialData
+            ? "Editar Recorrido"
+            : "Nuevo Recorrido"}
+        </h2>
 
-      <input className="w-full rounded border p-2" placeholder="Año o periodo" value={year} onChange={(e) => setYear(e.target.value)}/>
+        <input className="w-full rounded border p-2" placeholder="Año o periodo" value={year} onChange={(e) => setYear(e.target.value)}/>
+        <input className="w-full rounded border p-2" placeholder="Título" value={title} onChange={(e) => settitle(e.target.value)}/>
 
-      <input className="w-full rounded border p-2" placeholder="Título" value={title} onChange={(e) => settitle(e.target.value)}/>
+        <select className="w-full rounded border p-2" value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="Educación">
+            Educación
+          </option>
+          <option value="Prácticas">
+            Prácticas
+          </option>
+          <option value="Formación">
+            Formación
+          </option>
+          <option value="Objetivo">
+            Objetivo
+          </option>
+        </select>
 
-      <select className="w-full rounded border p-2" value={type} onChange={(e) => setType(e.target.value)}>
-        <option value="Educación">
-          Educación
-        </option>
-        <option value="Prácticas">
-          Prácticas
-        </option>
-        <option value="Formación">
-          Formación
-        </option>
-        <option value="Objetivo">
-          Objetivo
-        </option>
-      </select>
+        <textarea className="w-full rounded border p-2" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)}/>
 
-      <textarea className="w-full rounded border p-2" placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)}/>
-
-      <button type="submit" className="rounded bg-green-600 px-4 py-2 text-white">
-        {initialData
-          ? "Actualizar Recorrido"
-          : "Guardar Recorrido"}
-      </button>
-    </form>
-  );
+        <input type="number" min={1} className="w-full rounded border p-2" placeholder="Orden" value={order} onChange={(e) => setOrder(Number(e.target.value))}/>
+            
+        <button type="submit" className="rounded bg-green-600 px-4 py-2 text-white">
+          {initialData
+            ? "Actualizar Recorrido"
+            : "Guardar Recorrido"}
+        </button>
+      </form>
+    );
 }
