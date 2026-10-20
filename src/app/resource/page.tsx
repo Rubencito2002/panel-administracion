@@ -12,6 +12,7 @@ export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingResource, setEditingResource,] = useState<Resource | null>(null);
+  const [search, setSearch] = useState("");
 
   const loadResources = async () => {
     try {
@@ -28,6 +29,8 @@ export default function ResourcesPage() {
   useEffect(() => {
     loadResources();
   }, []);
+
+  const filteredResources = resources.filter((resource) => resource.title.toLowerCase().includes(search.toLowerCase()));
 
   const handleSaveResource = async (resource: Resource) => {
       try {
@@ -67,9 +70,11 @@ export default function ResourcesPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="mb-6 text-3xl font-bold">
-          Recursos
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold"> Recursos </h1>
+
+        <div className="mb-6">
+          <input type="text" placeholder="Buscar proyecto..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-black p-3 text-white"/>
+        </div>
 
         {editingResource && (
           <div className="mb-4 rounded border border-blue-500 p-4">
@@ -81,14 +86,12 @@ export default function ResourcesPage() {
         <ResourceForm onSubmit={handleSaveResource} initialData={editingResource}/>
 
         {loading ? (
-          <p>Cargando recursos...</p>
+          <p> Cargando recursos... </p>
         ) : resources.length === 0 ? (
-          <p>
-            No hay recursos registrados.
-          </p>
+          <p> No hay recursos registrados. </p>
         ) : (
           <div className="space-y-4">
-            {resources.map((resource) => (
+            {filteredResources.map((resource) => (
               <div key={resource.id} className="rounded-lg border p-6 shadow-sm">
                 <h2 className="text-xl font-bold">
                   {resource.title}

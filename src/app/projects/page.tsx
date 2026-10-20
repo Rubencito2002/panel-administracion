@@ -12,6 +12,7 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [search, setSearch] = useState("");
 
   const loadProjects = async () => {
     try {
@@ -28,6 +29,8 @@ export default function ProjectsPage() {
   useEffect(() => {
     loadProjects();
   }, []);
+
+  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleCreateProject = async (project: Project) => {
     try {
@@ -80,9 +83,10 @@ export default function ProjectsPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="mb-6 text-3xl font-bold">
-          Proyectos
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold"> Proyectos </h1>
+        <div className="mb-6">
+          <input type="text" placeholder="Buscar proyecto..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-black p-3 text-white"/>
+        </div>
 
         {editingProject && (
           <div className="mb-4 rounded border border-blue-500 p-4">
@@ -102,7 +106,7 @@ export default function ProjectsPage() {
           <p>No hay proyectos registrados.</p>
         ) : (
           <div className="space-y-4">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <div key={project.id} className="rounded-lg border p-6 shadow-sm">
 
                 {project.imageUrl && (

@@ -13,6 +13,7 @@ export default function CertificatesPage() {
   const [loading, setLoading] = useState(true);
   const [ editingCertificate, setEditingCertificate, ] = useState<Certificate | null>(null);
   // const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [search, setSearch] = useState("");
   
   const loadCertificates = async () => {
     try {
@@ -30,6 +31,8 @@ export default function CertificatesPage() {
   useEffect(() => {
     loadCertificates();
   }, []);
+
+  const filteredCertificates = certificates.filter((certificate) => certificate.name.toLowerCase().includes(search.toLowerCase()));
 
   const handleSaveCertificate = async (certificate: Certificate) => {
     try {
@@ -88,9 +91,11 @@ export default function CertificatesPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="mb-6 text-3xl font-bold">
-          Certificados
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold"> Certificados </h1>
+
+        <div className="mb-6">
+          <input type="text" placeholder="Buscar proyecto..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-black p-3 text-white"/>
+        </div>
 
         {editingCertificate && (
           <div className="mb-4 rounded border border-blue-500 p-4">
@@ -101,28 +106,16 @@ export default function CertificatesPage() {
           </div>
         )}
 
-        <CertificateForm
-          onSubmit={
-            handleSaveCertificate
-          }
-          initialData={
-            editingCertificate
-          }
-        />
+        <CertificateForm onSubmit={handleSaveCertificate} initialData={editingCertificate}/>
 
         {loading ? (
-          <p>
-            Cargando certificados...
-          </p>
+          <p> Cargando certificados... </p>
         ) : certificates.length ===
           0 ? (
-          <p>
-            No hay certificados
-            registrados.
-          </p>
+          <p> No hay certificados registrados. </p>
         ) : (
           <div className="space-y-4">
-            {certificates.map(
+            {filteredCertificates.map(
               (certificate) => (
                 <div key={ certificate.id } className="rounded-lg border p-6 shadow-sm">
                   <h2 className="text-xl font-bold">

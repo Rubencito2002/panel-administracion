@@ -12,6 +12,7 @@ export default function JourneyPage() {
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingJourney, setEditingJourney, ] = useState<Journey | null>(null);
+  const [search, setSearch] = useState("");
 
   const loadJourney = async () => {
     try {
@@ -28,6 +29,8 @@ export default function JourneyPage() {
   useEffect(() => {
     loadJourney();
   }, []);
+
+  const filteredJourneys = journeys.filter((journey) => journey.title.toLowerCase().includes(search.toLowerCase()));
 
   const handleSaveJourney = async (journey: Journey) => {
       try {
@@ -66,9 +69,11 @@ export default function JourneyPage() {
   return (
     <DashboardLayout>
       <div>
-        <h1 className="mb-6 text-3xl font-bold">
-          Recorrido
-        </h1>
+        <h1 className="mb-6 text-3xl font-bold"> Recorrido </h1>
+
+        <div className="mb-6">
+          <input type="text" placeholder="Buscar proyecto..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-black p-3 text-white"/>
+        </div>
 
         {editingJourney && (
           <div className="mb-4 rounded border border-blue-500 p-4">
@@ -80,10 +85,10 @@ export default function JourneyPage() {
         <JourneyForm onSubmit={handleSaveJourney} initialData={editingJourney}/>
 
         {loading ? (
-          <p>Cargando...</p>
+          <p> Cargando... </p>
         ) : (
           <div className="space-y-4">
-            {journeys.map((journey) => (
+            {filteredJourneys.map((journey) => (
               <div key={journey.id} className="rounded-lg border p-4 shadow-sm">
                 <p className="font-bold">
                   {journey.year}
