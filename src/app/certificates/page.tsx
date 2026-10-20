@@ -6,6 +6,7 @@ import CertificateForm from "@/components/certificates/CertificateForm";
 import { getCertificates, createCertificate, updateCertificate, deleteCertificate, } from "@/services/certificateService";
 import { Certificate } from "@/types/certificate";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 export default function CertificatesPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -30,9 +31,7 @@ export default function CertificatesPage() {
     loadCertificates();
   }, []);
 
-  const handleSaveCertificate = async (
-    certificate: Certificate
-  ) => {
+  const handleSaveCertificate = async (certificate: Certificate) => {
     try {
       if (
         editingCertificate &&
@@ -58,14 +57,10 @@ export default function CertificatesPage() {
     }
   };
 
-  const handleDeleteCertificate =
-    async (id: string) => {
-      const confirmed =
-        window.confirm(
-          "¿Seguro que deseas eliminar este certificado?"
-        );
-
-      if (!confirmed) return;
+  const handleDeleteCertificate = async (id: string) => {
+      const result = await Swal.fire({title: "¿Eliminar proyecto?", text: "Esta acción no se puede deshacer.", icon: "warning", showCancelButton: true, confirmButtonColor: "#dc2626", cancelButtonColor: "#6b7280", confirmButtonText: "Eliminar", cancelButtonText: "Cancelar",});
+      
+      if (!result.isConfirmed) return;
 
       try {
         await deleteCertificate(id);

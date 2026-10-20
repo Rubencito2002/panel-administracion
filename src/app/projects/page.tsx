@@ -6,6 +6,7 @@ import ProjectForm from "@/components/projects/ProjectForm";
 import { getProjects, createProject, updateProject, deleteProject, } from "@/services/projectService";
 import { Project } from "@/types/project";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -28,9 +29,7 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
-  const handleCreateProject = async (
-    project: Project
-  ) => {
+  const handleCreateProject = async (project: Project) => {
     try {
       if (
         editingProject &&
@@ -53,12 +52,10 @@ export default function ProjectsPage() {
     }
   };
 
-  const handleDeleteProject = async (
-    id: string
-  ) => {
-    const confirmed = window.confirm("¿Seguro que deseas eliminar este proyecto?");
+  const handleDeleteProject = async (id: string) => {
+    const result = await Swal.fire({title: "¿Eliminar proyecto?", text: "Esta acción no se puede deshacer.", icon: "warning", showCancelButton: true, confirmButtonColor: "#dc2626", cancelButtonColor: "#6b7280", confirmButtonText: "Eliminar", cancelButtonText: "Cancelar",});
 
-    if (!confirmed) return;
+    if (!result.isConfirmed) return;
 
     try {
       await deleteProject(id);

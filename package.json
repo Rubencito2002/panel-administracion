@@ -16,7 +16,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "^7.90.0",
-    "react-hot-toast": "^2.6.1"
+    "react-hot-toast": "^2.6.1",
+    "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

@@ -6,6 +6,7 @@ import ResourceForm from "@/components/resource/ResourceForm";
 import { getResources, createResource, updateResource, deleteResource, } from "@/services/resourceService";
 import { Resource } from "@/types/resource";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -52,9 +53,9 @@ export default function ResourcesPage() {
     };
 
   const handleDeleteResource = async (id: string) => {
-      const confirmed = window.confirm("¿Seguro que deseas eliminar este recurso?");
-
-      if (!confirmed) return;
+      const result = await Swal.fire({title: "¿Eliminar proyecto?", text: "Esta acción no se puede deshacer.", icon: "warning", showCancelButton: true, confirmButtonColor: "#dc2626", cancelButtonColor: "#6b7280", confirmButtonText: "Eliminar", cancelButtonText: "Cancelar",});
+            
+      if (!result.isConfirmed) return;
 
       await deleteResource(id);
 
