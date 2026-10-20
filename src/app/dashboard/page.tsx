@@ -15,6 +15,11 @@ export default function DashboardPage() {
     resources: 0,
   });
 
+  const [latestProject, setLatestProject] = useState("");
+  const [latestCertificate, setLatestCertificate] = useState("");
+  const [latestJourney, setLatestJourney] = useState("");
+  const [latestResource, setLatestResource] = useState("");
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {const loadStats = async () => {
@@ -27,6 +32,21 @@ export default function DashboardPage() {
           journey: journey.length,
           resources: resources.length,
         });
+        setLatestProject(
+          projects[projects.length - 1]?.name || "-"
+        );
+
+        setLatestCertificate(
+          certificates[certificates.length - 1]?.name || "-"
+        );
+
+        setLatestJourney(
+          journey[journey.length - 1]?.title || "-"
+        );
+
+        setLatestResource(
+          resources[resources.length - 1]?.title || "-"
+        );
       } catch (error) {
         console.error(
           "Error cargando estadísticas:",
@@ -52,43 +72,31 @@ export default function DashboardPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-lg border p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                Proyectos
-              </h2>
-
-              <p className="mt-3 text-4xl font-bold text-cyan-500">
-                {stats.projects}
-              </p>
+              <h2 className="text-lg font-semibold"> Proyectos </h2>
+              <p className="mt-3 text-4xl font-bold text-cyan-500"> {stats.projects} </p>
+              <p className="mt-4 text-sm text-gray-500"> Último proyecto: </p>
+              <p className="font-medium"> {latestProject} </p>
             </div>
 
             <div className="rounded-lg border p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                Certificados
-              </h2>
-
-              <p className="mt-3 text-4xl font-bold text-green-500">
-                {stats.certificates}
-              </p>
+              <h2 className="text-lg font-semibold"> Certificados </h2>
+              <p className="mt-3 text-4xl font-bold text-green-500"> {stats.certificates} </p>
+              <p className="mt-4 text-sm text-gray-500"> Último certificado: </p>
+              <p className="font-medium"> {latestCertificate} </p>
             </div>
 
             <div className="rounded-lg border p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                Recorrido
-              </h2>
-
-              <p className="mt-3 text-4xl font-bold text-purple-500">
-                {stats.journey}
-              </p>
+              <h2 className="text-lg font-semibold"> Recorrido </h2>
+              <p className="mt-3 text-4xl font-bold text-purple-500"> {stats.journey} </p>
+              <p className="mt-4 text-sm text-gray-500"> Último elemento: </p>
+              <p className="font-medium"> {latestJourney} </p>
             </div>
 
             <div className="rounded-lg border p-6 shadow-sm">
-              <h2 className="text-lg font-semibold">
-                Recursos
-              </h2>
-
-              <p className="mt-3 text-4xl font-bold text-orange-500">
-                {stats.resources}
-              </p>
+              <h2 className="text-lg font-semibold"> Recursos </h2>
+              <p className="mt-3 text-4xl font-bold text-orange-500"> {stats.resources} </p>
+              <p className="mt-4 text-sm text-gray-500"> Último recurso: </p>
+              <p className="font-medium"> {latestResource} </p>
             </div>
           </div>
         )}
