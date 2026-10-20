@@ -20,6 +20,8 @@ export default function DashboardPage() {
   const [latestJourney, setLatestJourney] = useState("");
   const [latestResource, setLatestResource] = useState("");
   const [featuredProjects, setFeaturedProjects] = useState(0);
+  const [topTechnology, setTopTechnology] = useState("-");
+  const [topTechnologyCount, setTopTechnologyCount] = useState(0);
 
   const [loading, setLoading] = useState(true);
 
@@ -53,6 +55,20 @@ export default function DashboardPage() {
             (project) => project.featured
           ).length
         );
+        const technologyStats: Record<string, number> = {};
+
+        projects.forEach((project) => {
+          project.technologies?.forEach((tech) => {
+            technologyStats[tech] = (technologyStats[tech] || 0) + 1;
+          });
+        });
+
+        const mostUsed = Object.entries(technologyStats).sort((a, b) => b[1] - a[1])[0];
+
+        if (mostUsed) {
+          setTopTechnology(mostUsed[0]);
+          setTopTechnologyCount(mostUsed[1]);
+        }
       } catch (error) {
         console.error(
           "Error cargando estadísticas:",
@@ -111,6 +127,12 @@ export default function DashboardPage() {
                 <p className="mt-3 text-4xl font-bold text-yellow-500"> {featuredProjects} </p>
                 <p className="mt-4 text-sm text-gray-500"> Marcados en la Home </p>
               </div>
+            </div>
+
+            <div className="mt-8 rounded-lg border p-6 shadow-sm">
+              <h2 className="text-xl font-bold mb-4"> 💻 Tecnología Más Utilizada </h2>
+              <p className="text-4xl font-bold text-cyan-500"> {topTechnology} </p>
+              <p className="mt-2 text-gray-500"> Utilizada en {topTechnologyCount} proyectos </p>
             </div>
 
             <div className="mt-8 rounded-lg border p-6 shadow-sm">
