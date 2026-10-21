@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [featuredProjects, setFeaturedProjects] = useState(0);
   const [topTechnology, setTopTechnology] = useState("-");
   const [topTechnologyCount, setTopTechnologyCount] = useState(0);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +56,39 @@ export default function DashboardPage() {
             (project) => project.featured
           ).length
         );
+
+        const activity = [
+          ...projects.map((project) => ({
+            type: "Proyecto",
+            name: project.name,
+            updatedAt: project.updatedAt,
+            icon: "📁",
+          })),
+
+          ...certificates.map((certificate) => ({
+            type: "Certificado",
+            name: certificate.name,
+            updatedAt: certificate.updatedAt,
+            icon: "🎓",
+          })),
+
+          ...journey.map((item) => ({
+            type: "Recorrido",
+            name: item.title,
+            updatedAt: item.updatedAt,
+            icon: "🧭",
+          })),
+
+          ...resources.map((resource) => ({
+            type: "Recurso",
+            name: resource.title,
+            updatedAt: resource.updatedAt,
+            icon: "🔗",
+          })),
+        ].filter((item) => item.updatedAt).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0)).slice(0, 10);
+
+        setRecentActivity(activity);
+
         const technologyStats: Record<string, number> = {};
 
         projects.forEach((project) => {
@@ -148,13 +182,25 @@ export default function DashboardPage() {
 
             <div className="mt-8 rounded-lg border p-6 shadow-sm">
               <h2 className="text-xl font-bold mb-4"> Actividad Reciente </h2>
-
-              <ul className="space-y-3">
-                <li> 📁 Último proyecto añadido: <span className="ml-2 font-medium"> {latestProject} </span> </li>
-                <li> 🎓 Último certificado añadido: <span className="ml-2 font-medium"> {latestCertificate} </span> </li>
-                <li> 🧭 Último elemento del recorrido: <span className="ml-2 font-medium"> {latestJourney} </span> </li>
-                <li> 🔗 Último recurso añadido: <span className="ml-2 font-medium"> {latestResource} </span> </li>
-              </ul>
+              <div className="space-y-3">
+                {recentActivity.map(
+                  (activity, index) => (
+                    <div key={index} className="rounded border p-3">
+                      <div className="font-medium">
+                        {activity.icon} {activity.type}
+                      </div>
+                      <div className="text-sm">
+                        {activity.name}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {activity.updatedAt
+                          ?.toDate()
+                          .toLocaleString("es-ES")}
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           </>
         )}
