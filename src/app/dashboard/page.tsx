@@ -145,6 +145,17 @@ export default function DashboardPage() {
                 <li> 🔗 {stats.resources} recursos </li>
               </ul>
             </div>
+
+            <div className="mt-8 rounded-lg border p-6 shadow-sm">
+              <h2 className="text-xl font-bold mb-4"> Actividad Reciente </h2>
+
+              <ul className="space-y-3">
+                <li> 📁 Último proyecto añadido: <span className="ml-2 font-medium"> {latestProject} </span> </li>
+                <li> 🎓 Último certificado añadido: <span className="ml-2 font-medium"> {latestCertificate} </span> </li>
+                <li> 🧭 Último elemento del recorrido: <span className="ml-2 font-medium"> {latestJourney} </span> </li>
+                <li> 🔗 Último recurso añadido: <span className="ml-2 font-medium"> {latestResource} </span> </li>
+              </ul>
+            </div>
           </>
         )}
       </div>
