@@ -1,4 +1,4 @@
-import { addDoc, doc, collection, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
+import { addDoc, doc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp, } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Project } from "@/types/project";
 
@@ -14,13 +14,13 @@ export const getProjects = async (): Promise<Project[]> => {
 };
 
 export const createProject = async (
-  project: Project ) => { return await addDoc(projectsCollection, project);
+  project: Project ) => { return await addDoc(projectsCollection, {...project, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),});
 };
 
 export const updateProject = async ( projectId: string, projectData: Partial<Project> ) => {
   const projectRef = doc( db, "projects", projectId );
 
-  await updateDoc( projectRef, projectData );
+  await updateDoc( projectRef, {...projectData, updatedAt: serverTimestamp(),} );
 };
 
 export const deleteProject = async ( projectId: string ) => {

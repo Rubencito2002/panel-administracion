@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Journey {
   id?: string;
   year: string;
@@ -5,4 +7,6 @@ export interface Journey {
   type: string;
   description: string;
   order: number;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }

@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Certificate {
     id?: string,
     name: string,
@@ -7,4 +9,6 @@ export interface Certificate {
     year: string,
     link?: string,
     pdfUrl?: string,
+    createdAt?: Timestamp;
+    updatedAt?: Timestamp;
 }

@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Project {
   id?: string;
   name: string;
@@ -12,4 +14,6 @@ export interface Project {
   imageUrl?: string;
   year: string;
   featured: boolean;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }

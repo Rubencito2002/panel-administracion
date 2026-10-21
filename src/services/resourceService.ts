@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc, serverTimestamp, } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Resource } from "@/types/resource";
 
@@ -15,15 +15,13 @@ export const getResources = async (): Promise<Resource[]> => {
 
 export const createResource = async (resource: Resource) => {
   return await addDoc(
-    resourcesCollection,
-    resource
-  );
+    resourcesCollection, {...resource, createdAt: serverTimestamp(), updatedAt: serverTimestamp(), });
 };
 
 export const updateResource = async (resourceId: string, resourceData: Partial<Resource>) => {
   const resourceRef = doc(db, "resources", resourceId);
 
-  await updateDoc( resourceRef, resourceData);
+  await updateDoc( resourceRef, {...resourceData, updatedAt: serverTimestamp(), });
 };
 
 export const deleteResource = async (resourceId: string) => {
