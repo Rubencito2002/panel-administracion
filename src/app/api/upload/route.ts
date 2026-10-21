@@ -34,7 +34,7 @@ export async function POST(req: Request) {
                 : "portfolio-projects",
 
               resource_type: isPdf
-                ? "raw"
+                ? "auto"
                 : "image",
             },
             (error, result) => {
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
           .end(buffer);
       }
     );
-
+    // console.log(result);
     return NextResponse.json({
       url: result.secure_url,
     });
