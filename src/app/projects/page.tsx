@@ -13,6 +13,7 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [search, setSearch] = useState("");
+  const [featuredFilter, setFeaturedFilter] = useState("all");
 
   const loadProjects = async () => {
     try {
@@ -30,7 +31,15 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
-  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(search.toLowerCase())).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
+  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(search.toLowerCase())).filter((project) => {
+    if (featuredFilter === "featured")
+      return project.featured;
+
+    if (featuredFilter === "normal")
+      return !project.featured;
+
+    return true;
+  }).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
 
   const handleCreateProject = async (project: Project) => {
     try {
@@ -48,8 +57,7 @@ export default function ProjectsPage() {
       }
 
       if (
-        editingProject &&
-        editingProject.id
+        editingProject && editingProject.id
       ) {
         await updateProject(editingProject.id,project);
         toast.success("Proyecto actualizado correctamente")
@@ -97,8 +105,15 @@ export default function ProjectsPage() {
     <DashboardLayout>
       <div>
         <h1 className="mb-6 text-3xl font-bold"> Proyectos </h1>
-        <div className="mb-6">
+        <div className="mb-6 flex items-center gap-4">
           <input type="text" placeholder="Buscar proyecto..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full rounded-lg border border-gray-300 bg-black p-3 text-white"/>
+        </div>
+        <div className="mb-6 flex items-center gap-4">
+          <select value={featuredFilter} onChange={(e) => setFeaturedFilter(e.target.value)} className="rounded-lg border p-2">
+              <option value="all">Todos</option>
+              <option value="featured"> Destacados </option>
+              <option value="normal"> No destacados </option>
+            </select>
         </div>
 
         {editingProject && (
@@ -126,11 +141,7 @@ export default function ProjectsPage() {
               <div key={project.id} className="rounded-lg border p-6 shadow-sm">
 
                 {project.imageUrl && (
-                  <img
-                    src={project.imageUrl}
-                    alt={project.name}
-                    className="mb-4 h-48 w-full rounded-lg object-cover"
-                  />
+                  <img src={project.imageUrl} alt={project.name} className="mb-4 h-48 w-full rounded-lg object-cover"/>
                 )}
                 
                 <div className="flex items-center justify-between">
