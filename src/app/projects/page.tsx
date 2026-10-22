@@ -34,6 +34,19 @@ export default function ProjectsPage() {
 
   const handleCreateProject = async (project: Project) => {
     try {
+      const featuredProjects = projects.filter((p) => p.featured && p.id !== editingProject?.id);
+
+      if (project.featured && featuredProjects.length >= 3) {
+        await Swal.fire({
+          icon: "warning",
+          title: "Límite alcanzado",
+          text: "Solo se permiten 3 proyectos destacados.",
+          confirmButtonColor: "#f59e0b",
+        });
+
+        return;
+      }
+
       if (
         editingProject &&
         editingProject.id
@@ -95,10 +108,13 @@ export default function ProjectsPage() {
           </div>
         )}
 
-        <ProjectForm
-          onSubmit={handleCreateProject}
-          initialData={editingProject}
-        />
+        <p className="mb-4 text-sm text-gray-500">
+          ⭐ Destacados actuales: {
+            projects.filter((p) => p.featured).length
+          } / 3
+        </p>
+
+        <ProjectForm onSubmit={handleCreateProject} initialData={editingProject}/>
 
         {loading ? (
           <p>Cargando proyectos...</p>
