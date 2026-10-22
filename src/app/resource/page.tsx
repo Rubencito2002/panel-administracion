@@ -30,13 +30,12 @@ export default function ResourcesPage() {
     loadResources();
   }, []);
 
-  const filteredResources = resources.filter((resource) => resource.title.toLowerCase().includes(search.toLowerCase()));
+  const filteredResources = resources.filter((resource) => resource.title.toLowerCase().includes(search.toLowerCase())).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
 
   const handleSaveResource = async (resource: Resource) => {
       try {
         if (
-          editingResource &&
-          editingResource.id
+          editingResource && editingResource.id
         ) {
           await updateResource(editingResource.id,resource);
           toast.success("Recurso actualizado correctamente");

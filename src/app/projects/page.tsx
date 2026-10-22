@@ -30,7 +30,7 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
-  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(search.toLowerCase())).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
 
   const handleCreateProject = async (project: Project) => {
     try {

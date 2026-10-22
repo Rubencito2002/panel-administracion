@@ -32,7 +32,7 @@ export default function CertificatesPage() {
     loadCertificates();
   }, []);
 
-  const filteredCertificates = certificates.filter((certificate) => certificate.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredCertificates = certificates.filter((certificate) => certificate.name.toLowerCase().includes(search.toLowerCase())).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
 
   const handleSaveCertificate = async (certificate: Certificate) => {
     try {

@@ -30,7 +30,7 @@ export default function JourneyPage() {
     loadJourney();
   }, []);
 
-  const filteredJourneys = journeys.filter((journey) => journey.title.toLowerCase().includes(search.toLowerCase()));
+  const filteredJourneys = journeys.filter((journey) => journey.title.toLowerCase().includes(search.toLowerCase())).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
 
   const handleSaveJourney = async (journey: Journey) => {
       try {
