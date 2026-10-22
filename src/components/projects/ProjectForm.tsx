@@ -1,50 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Project } from "@/types/project";
+import { Project, ProjectTag, ProjectType} from "@/types/project";
 
 interface ProjectFormProps {
   onSubmit: (data: Project) => Promise<void>;
   initialData?: Project | null;
 }
 
-export default function ProjectForm({
-  onSubmit,
-  initialData,
-}: ProjectFormProps) {
+export default function ProjectForm({onSubmit, initialData, }: ProjectFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [technologies, setTechnologies] = useState("");
-  const [type, setType] = useState("Frontend");
+  const [type, setType] = useState<ProjectType>("Frontend");
   const [github, setGithub] = useState("");
   const [demo, setDemo] = useState("");
   const [year, setYear] = useState("");
   const [featured, setFeatured] = useState(false);
+  const [tags, setTags] = useState<ProjectTag[]>([]);
 
-  const [imageFile, setImageFile] =
-    useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
 
-  const [imageUrl, setImageUrl] =
-    useState("");
-
-  const [uploading, setUploading] =
-    useState(false);
+  const availableTags: ProjectTag[] = [
+    "Personal",
+    "Académico",
+    "Prácticas",
+    "Trabajo",
+    "OpenSource",
+    "Portfolio",
+    "Cliente",
+  ];
 
   useEffect(() => {
     if (initialData) {
       setName(initialData.name);
       setDescription(initialData.description);
-      setTechnologies(
-        initialData.technologies.join(", ")
-      );
+      setTechnologies(initialData.technologies.join(", "));
       setType(initialData.type);
       setGithub(initialData.github);
       setDemo(initialData.demo || "");
       setYear(initialData.year);
       setFeatured(initialData.featured);
-      setImageUrl(
-        initialData.imageUrl || ""
-      );
+      setImageUrl(initialData.imageUrl || "");
+      setTags(initialData.tags || []);
     }
   }, [initialData]);
 
@@ -103,6 +103,7 @@ export default function ProjectForm({
         .split(",")
         .map((tech) => tech.trim())
         .filter(Boolean),
+      tags,
       type,
       github,
       demo,
@@ -123,6 +124,7 @@ export default function ProjectForm({
       setFeatured(false);
       setImageFile(null);
       setImageUrl("");
+      setTags([]);
     }
   };
 
@@ -140,7 +142,29 @@ export default function ProjectForm({
 
       <input className="w-full rounded border p-2" placeholder="Tecnologías (React, TypeScript, Firebase)" value={technologies} onChange={(e) => setTechnologies(e.target.value)}/>
 
-      <select className="w-full rounded border p-2" value={type} onChange={(e) => setType(e.target.value)}>
+      <div>
+        <label className="mb-2 block">
+          Etiquetas
+        </label>
+
+        <div className="flex flex-wrap gap-3">
+          {availableTags.map((tag) => (
+            <label key={tag} className="flex items-center gap-2">
+              <input type="checkbox" checked={tags.includes(tag)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setTags([...tags, tag]);
+                  } else {
+                    setTags(tags.filter((t) => t !== tag));
+                  }
+                }}/>
+              {tag}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <select className="w-full rounded border p-2" value={type} onChange={(e) => setType(e.target.value as ProjectType)}>
         <option value="Frontend">
           Frontend
         </option>

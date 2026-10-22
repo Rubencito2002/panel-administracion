@@ -1,14 +1,15 @@
 import { Timestamp } from "firebase/firestore";
 
+export type ProjectType = | "Frontend" | "Backend" | "FullStack";
+export type ProjectTag = | "Personal" | "Académico" | "Prácticas" | "Trabajo" | "OpenSource" | "Portfolio" | "Cliente";
+
 export interface Project {
   id?: string;
   name: string;
   description: string;
   technologies: string[];
-  type:
-    | "Frontend"
-    | "Backend"
-    | "FullStack";
+  type: ProjectType;
+  tags?: ProjectTag[];
   github: string;
   demo?: string;
   imageUrl?: string;

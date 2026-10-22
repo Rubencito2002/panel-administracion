@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import ProjectForm from "@/components/projects/ProjectForm";
 import { getProjects, createProject, updateProject, deleteProject, } from "@/services/projectService";
-import { Project } from "@/types/project";
+import { Project, ProjectTag, ProjectType} from "@/types/project";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 
@@ -169,6 +169,16 @@ export default function ProjectsPage() {
                     )
                   )}
                 </div>
+
+                {project.tags && project.tags.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {project.tags?.map((tag) => (
+                      <span key={tag} className="rounded-full border border-purple-500/40 bg-purple-500/20 px-3 py-1 text-sm text-purple-300">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 <div className="mt-4 space-y-1 text-sm">
                   <p>
