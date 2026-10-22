@@ -6,6 +6,7 @@ import { getProjects } from "@/services/projectService";
 import { getCertificates } from "@/services/certificateService";
 import { getJourney } from "@/services/journeyService";
 import { getResources } from "@/services/resourceService";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
@@ -133,6 +134,9 @@ export default function DashboardPage() {
                 <p className="mt-3 text-4xl font-bold text-cyan-500"> {stats.projects} </p>
                 <p className="mt-4 text-sm text-gray-500"> Último proyecto: </p>
                 <p className="font-medium"> {latestProject} </p>
+                <Link href="/projects" className="mt-4 inline-block rounded bg-cyan-600 px-3 py-2 text-sm text-white hover:bg-cyan-700">
+                  Ir a Proyectos →
+                </Link>
               </div>
 
               <div className="rounded-lg border p-6 shadow-sm">
@@ -140,6 +144,9 @@ export default function DashboardPage() {
                 <p className="mt-3 text-4xl font-bold text-green-500"> {stats.certificates} </p>
                 <p className="mt-4 text-sm text-gray-500"> Último certificado: </p>
                 <p className="font-medium"> {latestCertificate} </p>
+                <Link href="/certificates" className="mt-4 inline-block rounded bg-green-600 px-3 py-2 text-sm text-white hover:bg-green-700">
+                  Ir a Certificados →
+                </Link>
               </div>
 
               <div className="rounded-lg border p-6 shadow-sm">
@@ -147,6 +154,9 @@ export default function DashboardPage() {
                 <p className="mt-3 text-4xl font-bold text-purple-500"> {stats.journey} </p>
                 <p className="mt-4 text-sm text-gray-500"> Último elemento: </p>
                 <p className="font-medium"> {latestJourney} </p>
+                <Link href="/journey" className="mt-4 inline-block rounded bg-purple-600 px-3 py-2 text-sm text-white hover:bg-purple-700">
+                  Ir a Recorrido →
+                </Link>
               </div>
 
               <div className="rounded-lg border p-6 shadow-sm">
@@ -154,6 +164,9 @@ export default function DashboardPage() {
                 <p className="mt-3 text-4xl font-bold text-orange-500"> {stats.resources} </p>
                 <p className="mt-4 text-sm text-gray-500"> Último recurso: </p>
                 <p className="font-medium"> {latestResource} </p>
+                <Link href="/resources" className="mt-4 inline-block rounded bg-orange-600 px-3 py-2 text-sm text-white hover:bg-orange-700">
+                  Ir a Recursos →
+                </Link>
               </div>
 
               <div className="rounded-lg border p-6 shadow-sm">
