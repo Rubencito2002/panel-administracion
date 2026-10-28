@@ -8,6 +8,37 @@ import { getJourney } from "@/services/journeyService";
 import { getResources } from "@/services/resourceService";
 import Link from "next/link";
 
+const getTimeAgo = (date: Date) => {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  
+  const years = Math.floor(seconds / 31536000);
+  if (years > 0) {
+    return `hace ${years} año${years > 1 ? "s" : ""}`;
+  }
+
+  const months = Math.floor(seconds / 2592000);
+  if (months > 0) {
+    return `hace ${months} mes${months > 1 ? "es" : ""}`;
+  }
+
+  const days = Math.floor(seconds / 86400);
+  if (days > 0) {
+    return `hace ${days} día${days > 1 ? "s" : ""}`;
+  }
+
+  const hours = Math.floor(seconds / 3600);
+  if (hours > 0) {
+    return `hace ${hours} hora${hours > 1 ? "s" : ""}`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes > 0) {
+    return `hace ${minutes} minuto${minutes > 1 ? "s" : ""}`;
+  }
+
+  return "hace unos segundos";
+};
+
 export default function DashboardPage() {
   const [stats, setStats] = useState({
     projects: 0,
@@ -279,9 +310,9 @@ export default function DashboardPage() {
                         {activity.name}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
-                        {activity.updatedAt
-                          ?.toDate()
-                          .toLocaleString("es-ES")}
+                        {getTimeAgo(
+                          activity.updatedAt.toDate()
+                        )}
                       </div>
                     </div>
                   )
