@@ -26,6 +26,7 @@ export default function DashboardPage() {
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [topTag, setTopTag] = useState("-");
   const [topTagCount, setTopTagCount] = useState(0);
+  const [projectTypes, setProjectTypes] = useState({ frontend: 0, backend: 0, fullStack: 0, });
 
   const [loading, setLoading] = useState(true);
 
@@ -122,6 +123,12 @@ export default function DashboardPage() {
           setTopTag(mostUsedTag[0]);
           setTopTagCount(mostUsedTag[1]);
         }
+
+        setProjectTypes({
+          frontend: projects.filter((project) => project.type === "Frontend").length,
+          backend: projects.filter((project) => project.type === "Backend").length,
+          fullStack: projects.filter((project) => project.type === "FullStack").length,
+        });
       } catch (error) {
         console.error(
           "Error cargando estadísticas:",
@@ -204,6 +211,47 @@ export default function DashboardPage() {
                 <h2 className="text-xl font-bold mb-4"> 🏷️ Etiqueta Más Utilizada </h2>
                 <p className="text-4xl font-bold text-amber-500"> #{topTag} </p>
                 <p className="mt-2 text-gray-500"> Utilizada en {topTagCount} proyectos </p>
+              </div>
+
+              <div className="mt-8 rounded-lg border p-6 shadow-sm">
+                <h2 className="mb-4 text-xl font-bold"> 📊 Distribución de Proyectos </h2>
+
+                <div className="space-y-4">
+
+                  <div>
+                    <div className="mb-1 flex justify-between">
+                      <span>Frontend</span>
+                      <span>{projectTypes.frontend}</span>
+                    </div>
+
+                    <div className="h-3 rounded bg-gray-700">
+                      <div className="h-3 rounded bg-cyan-500" style={{width: `${stats.projects > 0 ? (projectTypes.frontend / stats.projects) * 100 : 0}%`,}}/>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-1 flex justify-between">
+                      <span>Backend</span>
+                      <span>{projectTypes.backend}</span>
+                    </div>
+
+                    <div className="h-3 rounded bg-gray-700">
+                      <div className="h-3 rounded bg-purple-500" style={{width: `${stats.projects > 0 ? (projectTypes.backend / stats.projects) * 100 : 0}%`,}}/>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-1 flex justify-between">
+                      <span>FullStack</span>
+                      <span>{projectTypes.fullStack}</span>
+                    </div>
+
+                    <div className="h-3 rounded bg-gray-700">
+                      <div className="h-3 rounded bg-green-500" style={{width: `${stats.projects > 0 ? (projectTypes.fullStack / stats.projects) * 100 : 0}%`,}}/>
+                    </div>
+                  </div>
+
+                </div>
               </div>
 
               <div className="mt-8 rounded-lg border p-6 shadow-sm">
