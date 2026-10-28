@@ -24,6 +24,8 @@ export default function DashboardPage() {
   const [topTechnology, setTopTechnology] = useState("-");
   const [topTechnologyCount, setTopTechnologyCount] = useState(0);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [topTag, setTopTag] = useState("-");
+  const [topTagCount, setTopTagCount] = useState(0);
 
   const [loading, setLoading] = useState(true);
 
@@ -104,6 +106,22 @@ export default function DashboardPage() {
           setTopTechnology(mostUsed[0]);
           setTopTechnologyCount(mostUsed[1]);
         }
+
+        const tagStats: Record<string, number> = {};
+
+        projects.forEach((project) => {
+          project.tags?.forEach((tag) => {
+            tagStats[tag] = (tagStats[tag] || 0) + 1;
+          });
+        });
+
+        const mostUsedTag = Object.entries(tagStats)
+          .sort((a, b) => b[1] - a[1])[0];
+
+        if (mostUsedTag) {
+          setTopTag(mostUsedTag[0]);
+          setTopTagCount(mostUsedTag[1]);
+        }
       } catch (error) {
         console.error(
           "Error cargando estadísticas:",
@@ -180,6 +198,12 @@ export default function DashboardPage() {
               <h2 className="text-xl font-bold mb-4"> 💻 Tecnología Más Utilizada </h2>
               <p className="text-4xl font-bold text-cyan-500"> {topTechnology} </p>
               <p className="mt-2 text-gray-500"> Utilizada en {topTechnologyCount} proyectos </p>
+            </div>
+
+            <div className="mt-8 rounded-lg border p-6 shadow-sm">
+              <h2 className="text-xl font-bold mb-4"> 🏷️ Etiqueta Más Utilizada </h2>
+              <p className="text-4xl font-bold text-amber-500"> #{topTag} </p>
+              <p className="mt-2 text-gray-500"> Utilizada en {topTagCount} proyectos </p>
             </div>
 
             <div className="mt-8 rounded-lg border p-6 shadow-sm">
