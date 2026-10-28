@@ -193,30 +193,31 @@ export default function DashboardPage() {
                 <p className="mt-4 text-sm text-gray-500"> Marcados en la Home </p>
               </div>
             </div>
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-8 rounded-lg border p-6 shadow-sm">
+                <h2 className="text-xl font-bold mb-4"> 💻 Tecnología Más Utilizada </h2>
+                <p className="text-4xl font-bold text-cyan-500"> {topTechnology} </p>
+                <p className="mt-2 text-gray-500"> Utilizada en {topTechnologyCount} proyectos </p>
+              </div>
 
-            <div className="mt-8 rounded-lg border p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4"> 💻 Tecnología Más Utilizada </h2>
-              <p className="text-4xl font-bold text-cyan-500"> {topTechnology} </p>
-              <p className="mt-2 text-gray-500"> Utilizada en {topTechnologyCount} proyectos </p>
+              <div className="mt-8 rounded-lg border p-6 shadow-sm">
+                <h2 className="text-xl font-bold mb-4"> 🏷️ Etiqueta Más Utilizada </h2>
+                <p className="text-4xl font-bold text-amber-500"> #{topTag} </p>
+                <p className="mt-2 text-gray-500"> Utilizada en {topTagCount} proyectos </p>
+              </div>
+
+              <div className="mt-8 rounded-lg border p-6 shadow-sm">
+                <h2 className="text-xl font-bold mb-4"> Resumen General </h2>
+                <p> Este CMS gestiona actualmente: </p>
+                <ul className="mt-3 space-y-2">
+                  <li> 📁 {stats.projects} proyectos </li>
+                  <li> 🎓 {stats.certificates} certificados </li>
+                  <li> 🧭 {stats.journey} elementos de recorrido </li>
+                  <li> 🔗 {stats.resources} recursos </li>
+                </ul>
+              </div>
             </div>
-
-            <div className="mt-8 rounded-lg border p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4"> 🏷️ Etiqueta Más Utilizada </h2>
-              <p className="text-4xl font-bold text-amber-500"> #{topTag} </p>
-              <p className="mt-2 text-gray-500"> Utilizada en {topTagCount} proyectos </p>
-            </div>
-
-            <div className="mt-8 rounded-lg border p-6 shadow-sm">
-              <h2 className="text-xl font-bold mb-4"> Resumen General </h2>
-              <p> Este CMS gestiona actualmente: </p>
-              <ul className="mt-3 space-y-2">
-                <li> 📁 {stats.projects} proyectos </li>
-                <li> 🎓 {stats.certificates} certificados </li>
-                <li> 🧭 {stats.journey} elementos de recorrido </li>
-                <li> 🔗 {stats.resources} recursos </li>
-              </ul>
-            </div>
-
+            
             <div className="mt-8 rounded-lg border p-6 shadow-sm">
               <h2 className="text-xl font-bold mb-4"> Actividad Reciente </h2>
               <div className="space-y-3">
