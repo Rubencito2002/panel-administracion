@@ -55,8 +55,7 @@ export default function DashboardPage() {
   const [topTechnology, setTopTechnology] = useState("-");
   const [topTechnologyCount, setTopTechnologyCount] = useState(0);
   const [recentActivity, setRecentActivity] = useState<any[]>([]);
-  const [topTag, setTopTag] = useState("-");
-  const [topTagCount, setTopTagCount] = useState(0);
+  const [topTags, setTopTags] = useState<{ tag: string; count: number }[]>([]);
   const [projectTypes, setProjectTypes] = useState({ frontend: 0, backend: 0, fullStack: 0, });
 
   const [loading, setLoading] = useState(true);
@@ -147,13 +146,9 @@ export default function DashboardPage() {
           });
         });
 
-        const mostUsedTag = Object.entries(tagStats)
-          .sort((a, b) => b[1] - a[1])[0];
+        const topTagsData = Object.entries(tagStats).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([tag, count]) => ({tag, count,}));
 
-        if (mostUsedTag) {
-          setTopTag(mostUsedTag[0]);
-          setTopTagCount(mostUsedTag[1]);
-        }
+        setTopTags(topTagsData);
 
         setProjectTypes({
           frontend: projects.filter((project) => project.type === "Frontend").length,
@@ -239,9 +234,27 @@ export default function DashboardPage() {
               </div>
 
               <div className="mt-8 rounded-lg border p-6 shadow-sm">
-                <h2 className="text-xl font-bold mb-4"> 🏷️ Etiqueta Más Utilizada </h2>
-                <p className="text-4xl font-bold text-amber-500"> #{topTag} </p>
-                <p className="mt-2 text-gray-500"> Utilizada en {topTagCount} proyectos </p>
+                <h2 className="text-xl font-bold mb-4"> 🏷️ Top Etiquetas </h2>
+                <div className="space-y-3">
+                  {topTags.map((item, index) => (
+                    <div key={item.tag} className="flex items-center justify-between">
+                      <div>
+                        <span className={index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-300" : "text-orange-400"}>
+                          {index === 0 && "🥇"}
+                          {index === 1 && "🥈"}
+                          {index === 2 && "🥉"}
+                        </span>
+                        <span className="font-medium">
+                          #{item.tag}
+                        </span>
+                      </div>
+
+                      <span className="rounded bg-amber-500/20 px-2 py-1 text-sm text-amber-400">
+                        {item.count}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="mt-8 rounded-lg border p-6 shadow-sm">
