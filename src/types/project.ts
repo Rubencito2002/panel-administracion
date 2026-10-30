@@ -5,6 +5,7 @@ export type ProjectTag = | "Personal" | "Académico" | "Prácticas" | "Trabajo" 
 
 export interface Project {
   id?: string;
+  slug: string;
   name: string;
   description: string;
   technologies: string[];

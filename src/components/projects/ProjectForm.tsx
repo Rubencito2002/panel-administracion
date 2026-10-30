@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Project, ProjectTag, ProjectType} from "@/types/project";
+import { generateSlug } from "@/utils/generateSlug";
 
 interface ProjectFormProps {
   onSubmit: (data: Project) => Promise<void>;
@@ -90,13 +91,14 @@ export default function ProjectForm({onSubmit, initialData, }: ProjectFormProps)
   ) => {
     e.preventDefault();
 
-    const uploadedImageUrl =
-      await uploadImage();
+    const uploadedImageUrl = await uploadImage();
+    const slug = generateSlug(name);
 
     await onSubmit({
       ...(initialData?.id && {
         id: initialData.id,
       }),
+      slug,
       name,
       description,
       technologies: technologies
